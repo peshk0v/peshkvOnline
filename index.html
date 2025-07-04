@@ -4,33 +4,444 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мои проекты</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0a0a12;
+            --bg-panel: #121220;
+            --border: #2a2a4a;
+            --accent: #5e4ae3;
+            --accent-light: #7b6aef;
+            --text: #e0e0ff;
+            --text-dim: #a0a0c0;
+            --success: #4ae388;
+            --warning: #ffb74d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(46, 16, 101, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(94, 74, 227, 0.1) 0%, transparent 20%);
+            overflow-x: hidden;
+        }
+
+        header {
+            background: rgba(10, 10, 26, 0.8);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+            position: relative;
+            backdrop-filter: blur(5px);
+            animation: slideDown 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            opacity: 0;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            opacity: 0.7;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, var(--accent-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        h1::after {
+            content: '>';
+            position: absolute;
+            right: 15%;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--success);
+            animation: blink 1.5s infinite;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .tile {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s forwards;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .tile:nth-child(1) { animation-delay: 0.2s; }
+        .tile:nth-child(2) { animation-delay: 0.4s; }
+        .tile:nth-child(3) { animation-delay: 0.6s; }
+
+        .tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            opacity: 0.8;
+        }
+
+        .tile:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-light);
+            box-shadow: 0 12px 30px rgba(94, 74, 227, 0.3);
+        }
+
+        .tile img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(30%) contrast(110%);
+            transition: all 0.5s ease;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tile:hover img {
+            filter: grayscale(0%) contrast(120%);
+            transform: scale(1.03);
+        }
+
+        .tile-content {
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .tile h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tile h2 i {
+            color: var(--warning);
+        }
+
+        .tile p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            flex-grow: 1;
+        }
+
+        .tile-bottom {
+            margin-top: auto;
+            padding-top: 1.2rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .tile a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--accent-light);
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--accent);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .tile a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(123, 106, 239, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .tile a:hover {
+            background: rgba(123, 106, 239, 0.1);
+            color: var(--text);
+            border-color: var(--accent-light);
+        }
+
+        .tile a:hover::before {
+            left: 100%;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.8rem;
+            border-radius: 3px;
+        }
+
+        .status-available {
+            background: rgba(74, 227, 136, 0.15);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-coming {
+            background: rgba(255, 183, 77, 0.15);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Статус-бар для десктопов */
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(18, 18, 32, 0.95);
+            border-top: 1px solid var(--border);
+            padding: 0.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-item i {
+            color: var(--accent-light);
+        }
+
+        /* Мобильная версия статус-бара */
+        .mobile-status-bar {
+            display: none;
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .mobile-status-items {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .mobile-status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mobile-status-item i {
+            color: var(--accent-light);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                grid-template-columns: 1fr;
+                padding-bottom: 4rem; /* Отступ для фиксированного статус-бара */
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .status-bar {
+                display: none; /* Скрываем десктопный статус-бар */
+            }
+            
+            .mobile-status-bar {
+                display: block; /* Показываем мобильный статус-бар */
+            }
+            
+            .tile {
+                margin: 0 0 1.5rem;
+            }
+            
+            .tile:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .tile-content {
+                padding: 1.2rem;
+            }
+            
+            .mobile-status-items {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .mobile-status-item {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Мои проекты</h1>
     </header>
+    
     <div class="container">
         <div class="tile">
-            <img src="src/chemistry.jpeg" alt="Проект 1">
-            <h2>Химический гид</h2>
-            <p>Интерактивная платформа для изучения химии с тестами и структурированной информацией.</p>
-            <a href="http://chemistry.peshkv.online/">Подробнее</a>
+            <img src="src/chemistry.jpeg" alt="Химический гид">
+            <div class="tile-content">
+                <h2><i class="fas fa-flask"></i> Химический гид</h2>
+                <p>Интерактивная платформа для изучения химии с тестами и структурированной информацией.</p>
+                <div class="tile-bottom">
+                    <div class="status status-available">Доступен онлайн</div>
+                    <a href="http://chemistry.peshkv.online/">
+                        <i class="fas fa-external-link-alt"></i> Подробнее
+                    </a>
+                </div>
+            </div>
         </div>
+        
         <div class="tile">
             <img src="https://github.com/peshk0v/SakuraLauncher/raw/main/web/img/Icon.png?raw=true" alt="SakuraLauncher">
-            <h2>SakuraLauncher</h2>
-            <p>Современный лаунчер для Minecraft с анимированным интерфейсом и системой модов</p>
-            <a href="http://sakura.peshkv.online/">Подробнее</a>
+            <div class="tile-content">
+                <h2><i class="fab fa-java"></i> SakuraLauncher</h2>
+                <p>Современный лаунчер для Minecraft с анимированным интерфейсом и системой модов</p>
+                <div class="tile-bottom">
+                    <div class="status status-available">Доступен онлайн</div>
+                    <a href="http://sakura.peshkv.online/">
+                        <i class="fas fa-external-link-alt"></i> Подробнее
+                    </a>
+                </div>
+            </div>
         </div>
+        
         <div class="tile">
-            <img src="src/IPYR.png" alt="IPYR">
-            <h2>Ill Paint You Red</h2>
-            <p>Визуальная новелла в жанре Романтика. <br> Пока что не доступна.</p>
-            <a href="http://ipyr.peshkv.online/">Подробнее</a>
+            <img src="src/IPYR.png" alt="Ill Paint You Red">
+            <div class="tile-content">
+                <h2><i class="fas fa-paint-brush"></i> Ill Paint You Red</h2>
+                <p>Визуальная новелла в жанре Романтика.</p>
+                <div class="tile-bottom">
+                    <div class="status status-coming">Скоро будет доступно</div>
+                    <a href="http://ipyr.peshkv.online/">
+                        <i class="fas fa-external-link-alt"></i> Подробнее
+                    </a>
+                </div>
+            </div>
         </div>
-        <!-- Добавьте больше плиток по мере необходимости -->
+    </div>
+
+    <!-- Десктопный статус-бар -->
+    <div class="status-bar">
+        <div class="status-item">
+            <i class="fas fa-code"></i>
+            <span>Проекты: 3</span>
+        </div>
+        <div class="status-item">
+            <i class="fas fa-user"></i>
+            <span>Разработчик: peshkv</span>
+        </div>
+        <div class="status-item">
+            <i class="fas fa-terminal"></i>
+            <span>Статус: online</span>
+        </div>
+    </div>
+    
+    <!-- Мобильный статус-бар -->
+    <div class="mobile-status-bar">
+        <div class="mobile-status-items">
+            <div class="mobile-status-item">
+                <i class="fas fa-code"></i>
+                <span>Проекты: 3</span>
+            </div>
+            <div class="mobile-status-item">
+                <i class="fas fa-user"></i>
+                <span>Разработчик: peshkv</span>
+            </div>
+            <div class="mobile-status-item">
+                <i class="fas fa-terminal"></i>
+                <span>Статус: online</span>
+            </div>
+        </div>
     </div>
 </body>
 </html>
